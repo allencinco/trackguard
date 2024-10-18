@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import the icon library
 import { useRouter } from 'expo-router'; // Import useRouter from expo-router
 import { auth } from '../../config/firebaseConfig'; // Make sure to import your Firebase config
 
@@ -9,6 +8,7 @@ export default function Profile() {
 
     const handleFeedback = () => {
         console.log('Feedback clicked');
+        router.push('/feedback'); // Navigate to the Feedback screen
     };
 
     const handleChangePassword = () => {
@@ -37,8 +37,6 @@ export default function Profile() {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Settings</Text>
-                {/* You can add an icon here if needed */}
-                {/* <Icon name="user" size={50} style={styles.icon} /> */}
             </View>
 
             <View style={styles.footer}>
@@ -79,10 +77,9 @@ const styles = StyleSheet.create({
     },
     footer: {
         position: 'absolute',
-        bottom: 20,
-        left: 0,
-        right: 0,
-        alignItems: 'center', // Center the buttons
+        bottom: 200, // Adjust this value to move the buttons higher or lower
+        width: '100%', // Ensure footer takes full width
+        alignItems: 'center', // Center the buttons horizontally
     },
     button: {
         backgroundColor: '#007bff',
@@ -90,6 +87,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         width: '80%', // Adjust width to make the buttons not full width
+        alignItems: 'center', // Center button content horizontally
     },
     buttonText: {
         color: '#fff',
