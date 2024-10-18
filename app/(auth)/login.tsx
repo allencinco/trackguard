@@ -23,10 +23,10 @@ export default function Login() {
                 } else if (error.code === 'auth/wrong-password') {
                     Alert.alert('Login Error', 'Incorrect password. Please try again.');
                 } else {
-                    Alert.alert('Login Error', error.message);
+                    Alert.alert('Login Error', "The password or email you’ve entered is incorrect.");
                 }
             } else if (error instanceof Error) {
-                Alert.alert('Login Error', error.message);
+                Alert.alert('Login Error', "The password or email you’ve entered is incorrect.");
             } else {
                 Alert.alert('Login Error', 'An unknown error occurred.');
             }
