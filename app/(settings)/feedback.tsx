@@ -76,7 +76,7 @@ const Feedback = () => {
 
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                        <Text style={styles.buttonText}>Submit Feedback</Text>
+                        <Text style={styles.buttonText}>Submit Report</Text>
                     </TouchableOpacity>
                 </View>
             </View>

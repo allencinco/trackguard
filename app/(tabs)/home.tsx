@@ -5,6 +5,7 @@ import { getDatabase, ref, onValue, set } from 'firebase/database';
 import * as Location from 'expo-location';
 import { auth } from '../../config/firebaseConfig';
 import { LinearGradient } from 'expo-linear-gradient';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 const Home = () => {
     const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
@@ -129,22 +130,46 @@ const Home = () => {
                     <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
                         <Text style={styles.buttonText}>Edit Profile</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, styles.emergencyButton]} onPress={handleSendReport}>
-                        <Text style={styles.buttonText}>Send Report</Text>
-                    </TouchableOpacity>
+                   
                 </View>
 
                 {/* Location History Section */}
                 <View style={styles.logsContainer}>
                     <Text style={styles.logsTitle}>Location History</Text>
-                    <ScrollView style={styles.logsList}>
+                    <ScrollView 
+                        style={styles.logsList}
+                        nestedScrollEnabled={true}
+                        showsVerticalScrollIndicator={true}
+                    >
                         {locationLogs.length > 0 ? (
                             locationLogs.map((log, index) => (
                                 <View key={index} style={styles.logItem}>
-                                    <Text style={styles.logText}>
-                                        Latitude: {log.latitude.toFixed(6)}, Longitude: {log.longitude.toFixed(6)}
-                                    </Text>
-                                    <Text style={styles.timestamp}>{log.timestamp}</Text>
+                                    <View style={styles.logTextContainer}>
+                                        <Text style={styles.logText}>
+                                            Latitude: {log.latitude.toFixed(6)}, Longitude: {log.longitude.toFixed(6)}
+                                        </Text>
+                                        <Text style={styles.timestamp}>{log.timestamp}</Text>
+                                    </View>
+                                    <MapView
+                                        provider={PROVIDER_GOOGLE}
+                                        style={styles.logMap}
+                                        initialRegion={{
+                                            latitude: log.latitude,
+                                            longitude: log.longitude,
+                                            latitudeDelta: 0.01,
+                                            longitudeDelta: 0.01,
+                                        }}
+                                        scrollEnabled={false}
+                                        zoomEnabled={false}
+                                        rotateEnabled={false}
+                                    >
+                                        <Marker
+                                            coordinate={{
+                                                latitude: log.latitude,
+                                                longitude: log.longitude,
+                                            }}
+                                        />
+                                    </MapView>
                                 </View>
                             ))
                         ) : (
@@ -169,10 +194,31 @@ const styles = StyleSheet.create({
     button: { backgroundColor: '#155e75', padding: 16, borderRadius: 12, alignItems: 'center' },
     emergencyButton: { backgroundColor: '#dc2626' },
     buttonText: { color: '#ffffff', fontWeight: '600' },
-    logsContainer: { marginTop: 32 },
+    logsContainer: { 
+        marginTop: 32,
+        flex: 1,
+    },
     logsTitle: { fontSize: 18, color: '#ffffff', marginBottom: 12 },
-    logsList: { maxHeight: 300 },
-    logItem: { padding: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+    logsList: { 
+        maxHeight: 350,
+        flexGrow: 0,
+    },
+    logItem: { 
+        padding: 8, 
+        borderBottomWidth: 1, 
+        borderBottomColor: '#ddd',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    logTextContainer: {
+        flex: 1,
+        marginRight: 10,
+    },
+    logMap: {
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+    },
     logText: { fontSize: 14, color: '#ffffff' },
     timestamp: { fontSize: 12, color: '#a9a9a9' },
     noLogsText: { fontSize: 14, color: '#ffffff', textAlign: 'center' },

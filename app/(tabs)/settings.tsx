@@ -39,7 +39,11 @@ export default function Settings() {
         }
     }, []);
 
-    const menuItems: { icon: 'person-outline' | 'key-outline' | 'document-text-outline' | 'chatbox-outline', title: string, onPress: () => void }[] = [
+    const menuItems: { 
+        icon: 'person-outline' | 'key-outline' | 'document-text-outline' | 'chatbox-outline', 
+        title: string, 
+        onPress: () => void 
+    }[] = [
         {
             icon: 'person-outline',
             title: 'Edit Profile',
@@ -48,16 +52,11 @@ export default function Settings() {
         {
             icon: 'key-outline',
             title: 'Change Password',
-            onPress: () => router.push("/(settings)change-password"),
-        },
-        {
-            icon: 'document-text-outline',
-            title: 'History',
-            onPress: () => router.push("/"),
+            onPress: () => router.push("/change-password"), // Fixed path
         },
         {
             icon: 'chatbox-outline',
-            title: 'Feedback',
+            title: 'Report',
             onPress: () => router.push("/feedback"),
         },
     ];

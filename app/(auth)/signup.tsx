@@ -30,66 +30,50 @@ const SignUp = () => {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (
-      !firstName ||
-      !lastName ||
-      !age ||
-      !gender ||
-      !address ||
-      !contactNumber ||
-      !relativeContactNumber ||
-      !email ||
-      !password
-    ) {
-      Alert.alert("Error", "All fields are required.");
-      return;
+    if (!firstName || !lastName || !age || !gender || !address || 
+        !contactNumber || !relativeContactNumber || !email || !password) {
+        Alert.alert("Error", "All fields are required.");
+        return;
     }
 
     setLoading(true);
     try {
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Save user data to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        firstName,
-        lastName,
-        age,
-        gender,
-        address,
-        contactNumber,
-        relativeContactNumber,
-        email,
-        createdAt: new Date().toISOString(),
-      });
-
-      Alert.alert("Success", "Sign-up successful!", [
-        {
-          text: "OK",
-          onPress: () => router.push("/login"),
-        },
-      ]);
-    } catch (error: any) {
-      if (error?.code === "auth/email-already-in-use") {
-        Alert.alert("Error", "The email address is already in use.");
-      } else if (error?.code === "auth/weak-password") {
-        Alert.alert("Error", "Password must be at least 6 characters long.");
-      } else if (error?.message?.includes("Missing or insufficient permissions")) {
-        Alert.alert(
-          "Error",
-          "Firestore permission error. Check your security rules."
+        // Create auth user
+        const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
         );
-      } else {
-        Alert.alert("Error", "Something went wrong. Please try again.");
-      }
-      console.error("Error during sign-up:", error);
+        const user = userCredential.user;
+
+        // Store user data in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+            firstName,
+            lastName,
+            age,
+            gender,
+            address,
+            contactNumber,
+            relativeContactNumber,
+            email,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            status: 'active',
+            userType: 'regular',
+            settings: {
+                notifications: true,
+                locationTracking: true
+            }
+        });
+
+        Alert.alert("Success", "Account created successfully!", [
+            { text: "OK", onPress: () => router.push("/login") }
+        ]);
+    } catch (error: any) {
+        console.error("Signup error:", error);
+        Alert.alert("Error", error.message || "Failed to create account");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
